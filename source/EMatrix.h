@@ -1358,7 +1358,7 @@ namespace Jde::Math
 			auto columnIndex = static_cast<Eigen::Index>( std::floor(dist(e2)) );
 			if( columnIndex>=(_int)excludedColumnIndex )
 				++columnIndex;
-			ASSRT_TR( columnIndex<(_int)columnCount );
+			ASSERT( columnIndex<(_int)columnCount );
 			matrix.coeffRef( rowIndex, randomColumnIndex ) = matrix.coeff( rowIndex, columnIndex );
 		}
 	}
@@ -1760,9 +1760,9 @@ namespace Jde::Math
 		{
 			for( uint rowIndex=0; rowIndex<rowCount; ++rowIndex )
 			{
-				ASSRT_TR( columnIndex<originalColumnCount );
+				ASSERT( columnIndex<originalColumnCount );
 				T value = *(matrix.data() + columnIndex*rowCount+rowIndex);
-				ASSRT_TR( toColumnIndex<colCount );
+				ASSERT( toColumnIndex<colCount );
 				pResults->coeffRef(rowIndex,toColumnIndex) = value;
 			}
 			++toColumnIndex;
