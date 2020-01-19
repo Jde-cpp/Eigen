@@ -138,7 +138,7 @@ namespace Jde::Math
 		MPtr<double,Rows,Cols> BsxFun( const M<Rows,Cols>& matrix1, const M<Matrix2Rows,Cols>& matrix2, const std::function<double(double,double)>& binaryFunction );
 		template<int Rows,int Cols, int Matrix2Rows>
 		MPtr<double,Rows,Cols> BsxFunSubtract( const M<Rows,Cols>& matrix, const Row<Cols>& rowVector ){ return BsxFun<Rows,Cols,Matrix2Rows>( matrix, rowVector, [](double value1, double value2){return value1-value2;} ); }
-		
+
 		template<int Rows,int Cols, int Matrix2Rows>
 		MPtr<double,Rows,Cols> BsxFunMultiply( const M<Rows,Cols>& matrix1, const M<Rows,Cols>& matrix2 ){ return BsxFun<Rows,Cols,Matrix2Rows>( matrix1, matrix2, [](double value1, double value2){return value1*value2;} ); }
 
@@ -162,25 +162,25 @@ namespace Jde::Math
 		up<Eigen::Matrix<T,-1,-1>> Covariance( const SparseT<T>& sparse, Eigen::Matrix<T,-1,-1>* pExisting, bool correlationCoefficient=false, size_t threadCount=1, Stopwatch* pStopwatch=nullptr, size_t columnCount=std::numeric_limits<size_t>::max(), const std::function<void(const Eigen::Matrix<float,-1,-1>&)>* saveFunction=nullptr );
 		template<typename T, int Rows=-1, int Cols=-1>
 		void ExportCsv( string_view pszFileName, const Eigen::Matrix<T,Rows,Cols>& matrix, const vector<string>* pColumnNames );
-		template<typename T, int64_t Rows, int64_t Cols> 
+		template<typename T, int64_t Rows, int64_t Cols>
 		Eigen::Matrix<T,Rows,Cols>& ExpTransform( Eigen::Matrix<T,Rows,Cols>& matrix );
 		       //Eigen::Matrix<T,Rows,Cols>& ExpTransform( Eigen::Matrix<T,Rows,Cols>& matrix )
-		template<typename T> 
+		template<typename T>
 		SparseT<T>& ExpTransform( SparseT<T>& matrix );
 
-		template<typename T> 
+		template<typename T>
 		size_t EqualCount( const Eigen::Matrix<T, Eigen::Dynamic, 1>& v1, const Eigen::Matrix<T, Eigen::Dynamic, 1>& v2 );
-		template<typename T> 
+		template<typename T>
 		size_t EqualCount( const Eigen::SparseVector<T>& v1, const Eigen::SparseVector<T>& v2 );
-		template<typename T,int Rows=-1, int Cols=-1> 
+		template<typename T,int Rows=-1, int Cols=-1>
 		size_t Count( const Eigen::Matrix<T,Rows, Cols>& vector, const T value );
-		template<typename T> 
+		template<typename T>
 		size_t Count( const Eigen::SparseVector<T>& vector, const T value );
-		template<typename T, int Rows=-1> 
+		template<typename T, int Rows=-1>
 		std::tuple<int64_t,int64_t,int64_t,int64_t> GetBinaryResults( const Eigen::Matrix<T,Rows,1>& actuals, const Eigen::Matrix<T,Rows,1>& predictions );
-		template<typename T> 
+		template<typename T>
 		up<std::map<size_t, std::map<T,size_t>>> GetUniqueValues(const Eigen::SparseMatrix<T>& vector );
-		template<typename T> 
+		template<typename T>
 		std::map<std::vector<bool>,std::map<T,size_t>> GetValueCounts( const Eigen::SparseMatrix<T>& sparse );
 
 		JDE_NATIVE_VISIBILITY Eigen::VectorXd Divide( const Eigen::VectorXd& numerator, double denominator );
@@ -213,7 +213,7 @@ namespace Jde::Math
 
 		template<size_t Rows>
 		up<MatrixD<Rows,3>> Hsv2Rgb( MatrixD<Rows,3> hsv );
-		
+
 		JDE_NATIVE_VISIBILITY std::tuple<MSharedPtr<size_t,-1,-1>,sp<map<size_t,string>>> CategoriesLoad( string_view csvFileName, std::vector<string>& columnNamesToFetch, size_t maxLines=std::numeric_limits<size_t>::max(), bool notColumns=false, int chunkSize=100000 );
 		//JDE_NATIVE_VISIBILITY std::tuple<MSharedPtr<size_t,-1,-1>,MSharedPtr<size_t,-1,-1>,vector<string>> CategoriesExpand( string_view csvTrain, string_view csvTest, std::vector<string>& columnNamesToFetch, size_t maxTrainLines=std::numeric_limits<size_t>::max(), size_t maxTestLines=std::numeric_limits<size_t>::max(), bool notColumns=false, int chunkSize=100000 );
 
@@ -264,7 +264,7 @@ namespace Jde::Math
 		JDE_NATIVE_VISIBILITY Eigen::MatrixXd PrefixOld( const Eigen::MatrixXd& matrix, double value );
 		template<int Rows=-1, typename Scaler=size_t>
 		up<Eigen::Matrix<Scaler,Rows,1>> RandomIndexes( Scaler upperBound, unsigned seed=0 );
-		
+
 		template<typename T=float,int Rows=-1, int Cols=-1>
 		void SetRandomColumn( Matrix<T,Rows,Cols>& matrix, uint excludedColumnIndex, uint randomColumnIndex=std::numeric_limits<uint>::max() )noexcept;
 
@@ -274,9 +274,9 @@ namespace Jde::Math
 		void RemoveColumn( Eigen::Matrix<T,Rows,Cols>& matrix, size_t columnIndex );
 		template<typename T>
 		up<Eigen::SparseMatrix<T>> RemoveColumn( const Eigen::SparseMatrix<T>& sparse, const int columnIndex );
-		
+
 		JDE_NATIVE_VISIBILITY void RemoveCategoryOrphans( Eigen::Matrix<size_t,-1,-1>& matrix1, Eigen::Matrix<size_t,-1,-1>& matrix2 );
-		
+
 		template<typename T,int Rows=-1, int Cols=-1>
 		void RemoveRow( Eigen::Matrix<T,Rows,Cols>& matrix, size_t rowIndex );
 
@@ -308,7 +308,7 @@ namespace Jde::Math
 		RowVectorPtr<T,-1> ToDenseRowVector( const Eigen::SparseVector<T>& vector );
 
 		JDE_NATIVE_VISIBILITY Eigen::VectorXd ToVector( const Eigen::MatrixXd matrix1, const Eigen::MatrixXd matrix2 );
-		
+
 		template<typename T,int64_t Rows,int64_t Cols>
 		up<Eigen::Matrix<T,-1,Cols>> Select( const Eigen::Matrix<T,Rows,Cols>& matrix, const Eigen::Matrix<bool,Rows,1>& selection, bool notSelection=false );
 
@@ -346,7 +346,7 @@ namespace Jde::Math
 	void EMatrix::ForEachCell( const Matrix<T,Rows,Columns>& matrix, std::function<void(T)> function )
 	{
 		const auto size = matrix.size();
-		if( size==0 ) 
+		if( size==0 )
 			return;
 		for( uint i = 0; i < size; ++i )
 		{
@@ -479,7 +479,7 @@ namespace Jde::Math
 	template<typename T,size_t RowCount,size_t ColumnCount>
 	void EMatrix::AssignEachCell( Eigen::Matrix<T,RowCount,ColumnCount,0>& matrix, std::function<T(T)> function )
 	{
-		if( matrix.size() == 0) 
+		if( matrix.size() == 0)
 			return;
 		for( size_t i = 0, size = matrix.size(); i < size; ++i )
 		{
@@ -490,7 +490,7 @@ namespace Jde::Math
 	template<typename T,size_t RowCount,size_t ColumnCount>
 	void EMatrix::AssignEachCellWithIndex( Eigen::Matrix<T,RowCount,ColumnCount>& matrix, std::function<T(T, size_t)> function )
 	{
-		if( matrix.size() == 0) 
+		if( matrix.size() == 0)
 			return;
 		for( size_t i = 0, size = matrix.size(); i < size; ++i )
 		{
@@ -498,7 +498,7 @@ namespace Jde::Math
 			*(matrix.data() + i) = function(temporary, i);
 		}
 	}
-	
+
 #pragma endregion
 #pragma region Auc
 	template<typename T,int Rows>
@@ -519,7 +519,7 @@ namespace Jde::Math
 		double auc = 0.0;
 		double height = 0.0;
 		double x = 0.0;
-		double cutoff = 0.0; 
+		double cutoff = 0.0;
 		for( int i=0; i<rowCount; ++i )
 		{
 			T actual = pActuals->coeff(i);
@@ -540,7 +540,7 @@ namespace Jde::Math
 		}
 		return std::make_tuple( cutoff, maxAccuracy, auc );
 	}
-#pragma endregion 
+#pragma endregion
 #pragma region AppendColumn
 	template<typename T>
 	void EMatrix::AppendColumn( Matrix<T,-1,-1,0>& matrix, const Vector<T,-1>& column )
@@ -559,7 +559,7 @@ namespace Jde::Math
 		ForEach<T,-1,-1>( append, [&pResults, startColumn]( uint row, uint column, float value ){ pResults->coeffRef(row, startColumn+column) = value; } );
 		return pResults;
 	}
-#pragma endregion 
+#pragma endregion
 #pragma region AverageColumns
 	template<typename T,int Rows,int Cols>
 	Eigen::Matrix<T,1,Cols> EMatrix::AverageColumns( const Eigen::Matrix<T,Rows,Cols>& matrix )
@@ -576,7 +576,7 @@ namespace Jde::Math
 		std::function<void(size_t,size_t,double)> cellFunction = [isRowVector,&result,&matrix2, &binaryFunction](size_t rowIndex,size_t columnIndex,double value)mutable
 		{
 			const size_t matrix2RowIndex = isRowVector ? 0 : rowIndex;
-			const double cellValue = binaryFunction( value, matrix2(matrix2RowIndex, columnIndex) ); 
+			const double cellValue = binaryFunction( value, matrix2(matrix2RowIndex, columnIndex) );
 			(*result)(rowIndex,columnIndex) = cellValue;
 		};
 		ForEach<double,Rows,Cols>( matrix1, cellFunction );
@@ -589,7 +589,7 @@ namespace Jde::Math
 	{
 		std::function<double(size_t,size_t,double)> cellFunction = [&rowVector, &binaryFunction](size_t,size_t columnIndex,double value)
 		{
-			return binaryFunction( value, rowVector(columnIndex) ); 
+			return binaryFunction( value, rowVector(columnIndex) );
 		};
 		//*(matrix.data() + i) = function( rowIndex, columnIndex, value );
 		Transform<double,Rows,Cols>( matrix, cellFunction );
@@ -600,7 +600,7 @@ namespace Jde::Math
 	Eigen::Matrix<T,Rows,Cols> EMatrix::Centered( const Eigen::Matrix<T,Rows,Cols>& matrix, Eigen::Matrix<T,1,Cols>* pAverage/*=nullptr*/ )
 	{
 		//Eigen::Matrix<T,1,Cols> average = pAverage==nullptr ? AverageColumns(matrix) : *pAverage;
-		//auto result = 
+		//auto result =
 		return matrix.rowwise() - (pAverage==nullptr ? AverageColumns(matrix) : *pAverage);
 	}
 #pragma endregion
@@ -616,7 +616,7 @@ namespace Jde::Math
 	Eigen::Matrix<T,Cols,Cols> EMatrix::Covariance( const Eigen::Matrix<T,Rows,Cols>& matrix, Eigen::Matrix<T,1,Cols>* pAverage/*=nullptr*/ )
 	{
 		auto centered = Centered( matrix, pAverage );
-		return (centered.adjoint() * centered) / T(matrix.rows() - 1);	
+		return (centered.adjoint() * centered) / T(matrix.rows() - 1);
 	}
 
 	template<typename T>
@@ -662,7 +662,7 @@ namespace Jde::Math
 				int rowIndex2 = -1;
 				std::unordered_map<int,std::pair<T,T>> values;
 				auto pInsertHint = values.begin();
-				
+
 				for( typename Eigen::SparseMatrix<T>::InnerIterator it(sparse,int(columnIndex1)), it2(sparse,columnIndex2); it || it2; )
 				{
 					rowIndex1 = it ? it.row() : std::numeric_limits<int>::max();
@@ -737,7 +737,7 @@ namespace Jde::Math
 
 		if( allocateStopwatch )
 			delete pStopwatch;
-		
+
 		return up<Eigen::Matrix<T,-1,-1>>( pExisting ? nullptr : pResult );
 	}
 #pragma endregion
@@ -774,7 +774,7 @@ namespace Jde::Math
 	}
 #pragma endregion
 #pragma region ExpTransform
-	template<typename T, int64_t Rows, int64_t Cols> 
+	template<typename T, int64_t Rows, int64_t Cols>
 	Eigen::Matrix<T,Rows,Cols>& EMatrix::ExpTransform( Eigen::Matrix<T,Rows,Cols>& matrix )
 	{
 		auto function = [](size_t, size_t, T& value)mutable{ value = std::exp(value); };
@@ -782,7 +782,7 @@ namespace Jde::Math
 		return matrix;
 	}
 
-	template<typename T> 
+	template<typename T>
 	SparseT<T>& EMatrix::ExpTransform( SparseT<T>& matrix )
 	{
 		auto function = [](int, int, T& value)mutable{ value = std::exp(value); };
@@ -799,7 +799,7 @@ namespace Jde::Math
 		ForEach( v1, countFunction );
 		return count;
 	}
-	template<typename T> 
+	template<typename T>
 	size_t EMatrix::EqualCount( const Eigen::SparseVector<T>& v1, const Eigen::SparseVector<T>& v2 )
 	{
 		size_t count=0;
@@ -808,7 +808,7 @@ namespace Jde::Math
 		return count;
 	}
 
-	template<typename T,int Rows, int Cols> 
+	template<typename T,int Rows, int Cols>
 	size_t EMatrix::Count( const Eigen::Matrix<T,Rows, Cols>& matrix, const T value )
 	{
 		size_t count = 0;
@@ -816,7 +816,7 @@ namespace Jde::Math
 		return count;
 	}
 
-	template<typename T> 
+	template<typename T>
 	size_t EMatrix::Count( const Eigen::SparseVector<T>& vector, T value )
 	{
 		size_t count = 0;
@@ -826,7 +826,7 @@ namespace Jde::Math
 	}
 #pragma endregion
 #pragma region GetBinaryResults
-	template<typename T, int Rows> 
+	template<typename T, int Rows>
 	std::tuple<int64_t,int64_t,int64_t,int64_t> EMatrix::GetBinaryResults( const Eigen::Matrix<T,Rows,1>& actuals, const Eigen::Matrix<T,Rows,1>& predictions )
 	{
 		assert( actuals.rows()==predictions.rows() );
@@ -849,7 +849,7 @@ namespace Jde::Math
 #pragma endregion
 #pragma region GetUniqueValues
 	///[j][value][count]
-	template<typename T> 
+	template<typename T>
 	up<std::map<size_t, std::map<T,size_t>>> EMatrix::GetUniqueValues(const Eigen::SparseMatrix<T>& matrix )
 	{
 		Stopwatch sw( StopwatchTypes::Calculate, "CountUniqueColumns", false );
@@ -858,7 +858,7 @@ namespace Jde::Math
 		for( int columnIndex = 0; columnIndex<columnCount; ++columnIndex )
 			pUniqueValues->insert( make_pair(columnIndex, std::map<T,size_t>()) );
 		auto function = [&pUniqueValues](int, int columnIndex, T value)
-		{ 
+		{
 			//if( columnIndex>2140 )
 			//	clog << "[" << columnIndex << "]=" << value << std::endl;
 			std::map<T,size_t>& columnMap = (*pUniqueValues)[columnIndex];
@@ -882,7 +882,7 @@ namespace Jde::Math
 
 #pragma endregion
 #pragma region GetValueCounts
-	template<typename T> 
+	template<typename T>
 	std::map<std::vector<bool>,std::map<T,size_t>> EMatrix::GetValueCounts( const Eigen::SparseMatrix<T>& sparse )
 	{
 		const auto columnCount = sparse.cols()-1;
@@ -984,7 +984,7 @@ namespace Jde::Math
 
 		return values;
 	}
-*/	
+*/
 	template<typename T>
 	std::pair<up<Eigen::Matrix<T,-1,1>>,up<Eigen::Matrix<int,-1,1>>> EMatrix::GetValues( const Eigen::SparseMatrix<T>& sparse, const int columnIndex )
 	{
@@ -1041,7 +1041,7 @@ namespace Jde::Math
 		MatrixD<Rows,3> rgbMapStart = v.cwiseProduct( zeros ).replicate(1,3);	//Matrix<Rows,3>::Zero(); rgb_map = repmat (v .* (1 - s), 1, 3);
 		// red = hue-2/3 : green = hue : blue = hue-1/3
 		// ## Apply modulo 1 for red and blue to keep within range [0, 1]
-		
+
 		VectorD<Rows> hue1; hue1 << h.unaryExpr( [](const double x) { double value=x-2.0/3.0; return /*value<0 ? 1.0+value :*/ std::fmod(value+1.0,1.0); } );
 		VectorD<Rows> hue2; hue2 << h.unaryExpr( [](const double x) { double value=x-1.0/3.0; return /*value<0 ? 1.0+value :*/ std::fmod(value+1.0,1.0); } );
 		MatrixD<Rows,3> hue(Rows,3);
@@ -1067,13 +1067,13 @@ namespace Jde::Math
 		};
 		ForEach(hue, function);
 		return up<MatrixD<Rows,3>>(rgbMap);
-		//98 
+		//98
 			//99   ## FIXME: hsv2rgb does not preserve class of image.
 			//100   ##        Should it also convert back to uint8, uint16 for integer images?
 			//101   ## If input was an image, convert it back into one.
 			//102   if (is_image)
 			//103     rgb_map = reshape (rgb_map, sz);
-		//104   endif		
+		//104   endif
 	}
 #pragma endregion
 #pragma region LoadCsv
@@ -1104,10 +1104,10 @@ namespace Jde::Math
 				THROW( Exception(fmt::format("Column counts don't add up for line '{}' actual:  '{}' expected:  '{}'"), lineIndex, tokens.size(), columnValues.size() ) );
 		};
 		/*size_t lineCount =*/ IO::File::ForEachLine4( csvFileName, getValues, columnIndexes, maxLines, 1, 1073741824, 1500, &sw, emptyValue );
-		
+
 		//getLinesStopWatch.Finish(); Stopwatch copySW( &sw, StopwatchTypes::Copy );
 		auto pResult = new Matrix<T,Rows,Cols>( columnValues.size(), columnCount );
-		
+
 		int i=0;
 		for( const auto& row : columnValues )
 		{
@@ -1256,7 +1256,7 @@ namespace Jde::Math
 	{
 		RowVector<T,Cols> average = AverageColumns(matrix);
 		up<RowVector<T,Cols>> standardDeviation = StandardDeviationColumns<T,Rows,Cols>( matrix, sample, &average );
-		
+
 		auto normalization = new Eigen::Matrix<T,Rows,Cols>( matrix.rows(), matrix.cols() );
 		//(*normalization)(1, 1)=0;
 		const std::function<void(size_t,size_t,T)> function = [normalization, &average, &standardDeviation ](size_t rowIndex, size_t columnIndex, T value)mutable{(*normalization)(rowIndex, columnIndex)=(value-average(columnIndex))/(*standardDeviation)(columnIndex);};
@@ -1273,9 +1273,9 @@ namespace Jde::Math
 		auto svd = Eigen::JacobiSVD<Eigen::Matrix<T,Rows,Cols>>( matrix, flags );
 		const Eigen::Matrix<T,Cols,1>& singularValues=svd.singularValues();
 		Eigen::Matrix<T,Cols,1> singularValues_inv=svd.singularValues();
-		for( long columnIndex=0; columnIndex<matrix.cols(); ++columnIndex ) 
+		for( long columnIndex=0; columnIndex<matrix.cols(); ++columnIndex )
 			singularValues_inv(columnIndex) = singularValues(columnIndex) > pinvtoler ? T(1.0)/singularValues(columnIndex) : T(0.0);
-		
+
 		auto result = svd.matrixV()*singularValues_inv.asDiagonal()*svd.matrixU().transpose();
 		std::clog << "Rows:  " << Rows << endl;
 		return Eigen::Matrix<T,Rows,Cols>(result);
@@ -1324,7 +1324,7 @@ namespace Jde::Math
 		//clog << "randomIndexes.size():  " << randomIndexes.size() << endl;
 		for( Scaler i =lowerBound; i<upperBound; ++i )
 			randomIndexes[i] = i;
-		
+
 		auto engine = seed==0 ? std::default_random_engine() : std::default_random_engine( seed );
 		std::shuffle( randomIndexes.begin(), randomIndexes.end(), engine );
 
@@ -1339,6 +1339,7 @@ namespace Jde::Math
 
 		return up<Eigen::Matrix<Scaler,Rows,1>>(results);
 	}
+	//Set column value to the value of another random column.
 	template<typename T,int Rows, int Cols>
 	void EMatrix::SetRandomColumn( Matrix<T,Rows,Cols>& matrix, uint excludedColumnIndex, uint randomColumnIndex )noexcept
 	{
@@ -1376,9 +1377,9 @@ namespace Jde::Math
 				if( insertResult.second )
 					clog << "removing row[" << columnIndex+offset <<"]=" << originalColumnNames[columnIndex+offset] << "duplcated with [" << rowIndex+offset << "]=" << originalColumnNames[rowIndex+offset] << std::endl;
 			}
-		}; 
+		};
 		ForEach<T,-1,-1>( originalCorrelationCoeficient, findDuplicates );
-		
+
 		Eigen::VectorXi columnCounts( x.cols()-duplicates.size() );
 		int columnIndex = 0;
 		size_t nonZeros=0;
@@ -1427,7 +1428,7 @@ namespace Jde::Math
 	template<typename T,int Rows, int Cols>
 	void EMatrix::RemoveColumn( Eigen::Matrix<T,Rows,Cols>& matrix, size_t columnIndex )
 	{
-		
+
 		const size_t rowCount = matrix.rows();
 		const size_t columnCount = matrix.cols()-1;
 		//clog << "rows:  " << matrix.rows() << std::endl;
@@ -1443,7 +1444,7 @@ namespace Jde::Math
 		const int columnCount = sparse.cols()-1;
 
 		auto pColumnCounts = GetColumnCounts(sparse);
-		
+
 		SparseT<T>* pResult = new SparseT<T>( rowCount, columnCount );
 		//clog << "rowCount:  " << rowCount << ".  columnCount:  " << columnCount << std::endl;
 		if( pColumnCounts!=nullptr )
@@ -1458,7 +1459,7 @@ namespace Jde::Math
 			};
 			ESparse::ForEachValue<T>( sparse, function );
 		}
-		pResult->reserve( *pColumnCounts );			
+		pResult->reserve( *pColumnCounts );
 
 		auto function = [&pResult,&removedIndex](int rowIndex, int columnIndex, T value)mutable
 		{
@@ -1470,7 +1471,7 @@ namespace Jde::Math
 		};
 
 		ESparse::ForEachValue<T>( sparse, function );
-	
+
 		return up<Eigen::SparseMatrix<T>>( pResult );
 	}
 
@@ -1485,7 +1486,7 @@ namespace Jde::Math
 		matrix.conservativeResize( rowCount, columnCount );
 	}
 #pragma endregion
-#pragma region Sort	
+#pragma region Sort
 	template<typename T, int SortCount, int Rows, int Cols>
 	up<Eigen::Matrix<T,Rows,Cols>> EMatrix::Sort(const Eigen::Matrix<T,Rows,Cols>& matrix, const std::array<int,SortCount>& columnIndexes, bool reverse/*=false*/, std::vector<size_t>* pOldRowIndexes/*=nullptr*/ )
 	{
@@ -1591,8 +1592,8 @@ namespace Jde::Math
 		//EMatrix::ForEachValue<T>( matrix,  );
 		//pResult->setConstant( 0.0 );
 		auto sumFunction = [pResult](int rowIndex,int,T value)mutable
-		{ 
-			pResult->coeffRef( rowIndex )+=value; 
+		{
+			pResult->coeffRef( rowIndex )+=value;
 		};
 		ESparse::ForEachValue<T>( matrix, sumFunction );
 		return up<Eigen::SparseVector<T>>( pResult );
@@ -1619,7 +1620,7 @@ namespace Jde::Math
 			ForEach<bool,Rows>( selection, [&count](size_t rowIndex,bool value)mutable{ if( !value )++count; } );
 		else
 			ForEach<bool,Rows>( selection, [&count](size_t rowIndex, bool value)mutable{ if( value )++count; } );
-		
+
 		auto	pResult = new Eigen::Matrix<T,-1,Cols>(count, matrix.cols() );
 		size_t index = 0;
 		if( notSelection )
@@ -1673,7 +1674,7 @@ namespace Jde::Math
 			auto value = pValue ? *pValue : T(0);
 			if( topValues.size()<count )
 				topValues.insert( std::make_pair(value, rowIndex) );
-			else 
+			else
 			{
 				T cutoff = topValues.begin()->first;
 				if( value>=cutoff )
@@ -1784,5 +1785,5 @@ namespace Jde::Math
 	}
 #pragma endregion
 
-#pragma warning( pop ) 
+#pragma warning( pop )
 }
