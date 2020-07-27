@@ -626,14 +626,14 @@ namespace Jde::Math
 		clog << "columnCount = " << columnCount << "  maxColumnCount=" << maxColumnCount << "  sparse.cols()=" << sparse.cols();
 		auto pResult = pExisting ? pExisting : new Eigen::Matrix<T,-1,-1>( sparse.cols(), sparse.cols() );
 		size_t iterationCount = size_t(std::pow<size_t>(columnCount,2)/2)-1;
-		const size_t progressIndex = std::max( size_t(10000), size_t(iterationCount/10) );
+		//const size_t progressIndex = std::max( size_t(10000), size_t(iterationCount/10) );
 		std::atomic<size_t> iteration = 0;
 		//constexpr zeroValue = std::make_pair( T(0), T(0) );
 		bool allocateStopwatch = pStopwatch==nullptr;
 		if( allocateStopwatch )
 			pStopwatch = new Stopwatch( fmt::format("StopwatchTypes::Calculate - {}", "Covariance"), false );
 		const static std::chrono::duration<size_t, std::chrono::nanoseconds::period> saveTimespan( 5*Chrono::TimeSpan::NanosPerMinute );
-		const auto lastSave = pStopwatch->Elapsed();
+		auto lastSave = pStopwatch->Elapsed();
 		std::mutex resultMutex;
 		//int threadWaitCount;
 		function<void(size_t)> columnFunction = [&sparse, correlationCoefficient, &iteration, &iterationCount, &pStopwatch,&pResult,&resultMutex, &pSaveFunction, &lastSave, &threadCount]( size_t columnIndex1 )mutable
@@ -852,7 +852,7 @@ namespace Jde::Math
 	template<typename T>
 	up<std::map<size_t, std::map<T,size_t>>> EMatrix::GetUniqueValues(const Eigen::SparseMatrix<T>& matrix )
 	{
-		Stopwatch sw( StopwatchTypes::Calculate, "CountUniqueColumns", false );
+		Stopwatch sw( "CountUniqueColumns" );
 		std::map<size_t, std::map<T,size_t>>* pUniqueValues = new std::map<size_t, std::map<T,size_t>>();
 		const size_t columnCount = matrix.outerSize();
 		for( int columnIndex = 0; columnIndex<columnCount; ++columnIndex )
@@ -1052,7 +1052,7 @@ namespace Jde::Math
 		//add s*v*hue-function to rgb map
 		//rgb_map += f .* (6 * (hue < 1/6) .* hue + (hue >= 1/6 & hue < 1/2) + (hue >= 1/2 & hue < 2/3) .* (4 - 6 * hue));
 		MatrixD<Rows,3>* rgbMap = new MatrixD<Rows,3>();
-		function<void(size_t,size_t,double)> function = [rgbMap, &hue, &f](size_t rowIndex,size_t columnIndex,double hue)
+		function<void(size_t,size_t,double)> function = [rgbMap, &f](size_t rowIndex,size_t columnIndex,double hue)
 		{
 			double value;
 			if( hue < 1.0/6.0 )
@@ -1398,7 +1398,7 @@ namespace Jde::Math
 		pResult->reserve( columnCounts );
 		int columnOffset = 0;
 		const size_t progressIndex = std::max( size_t(nonZeros/10), size_t(10000) );
-		Stopwatch sw( StopwatchTypes::Calculate, "RemoveColumns", false );
+		Stopwatch sw( "RemoveColumns", false );
 		int index = 0;
 		auto columnNames = originalColumnNames;
 		auto pCorrelationCoeficient = new Eigen::Matrix<T,-1,-1>( originalCorrelationCoeficient );

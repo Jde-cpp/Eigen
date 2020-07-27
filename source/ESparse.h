@@ -83,7 +83,7 @@ namespace Jde::Math
 		SparseTPtr<T> Sort(const SparseT<T>& matrix1, std::array<int,SortCount> columnIndexes, Stopwatch* pStopwatch=nullptr );
 		template<typename T>
 		up<Eigen::SparseVector<T>> AverageColumns( const SparseT<T>& matrix, bool valuesOnly/*=true*/ );
-		template<typename T> 
+		template<typename T>
 		size_t Count( const Eigen::SparseVector<T>& vector, const std::function<bool(int index,T value)> where );
 		template<typename T>
 		up<Eigen::SparseVector<T>> SumColumns( const SparseT<T>& matrix );
@@ -96,7 +96,7 @@ namespace Jde::Math
 	void ESparse::ForEach( const Eigen::SparseVector<T>& v, const function<void(int,const T*)>& function )
 	{
 		int i = 0;
-		
+
 		for( typename Eigen::SparseVector<T>::InnerIterator it(v); it; ++it, ++i )
 		{
 			for( ;i<it.row(); ++i )
@@ -150,7 +150,7 @@ namespace Jde::Math
 	}
 #pragma endregion
 #pragma region Count
-	template<typename T> 
+	template<typename T>
 	size_t ESparse::Count( const Eigen::SparseVector<T>& vector, const std::function<bool(int index,T value)> where )
 	{
 		size_t count = 0;
@@ -189,7 +189,7 @@ namespace Jde::Math
 	void ESparse::ExportCsv( const string& fileName, const SparseT<T>& matrix, const vector<string>* pColumnNames )
 	{
 		std::ofstream myfile;
-		myfile.open( (const char*)fileName );
+		myfile.open( fileName );
 		if( !myfile.good() )
 			throw "wtf";
 		if( pColumnNames )
@@ -231,7 +231,7 @@ namespace Jde::Math
 		ESparse::ForEach<T>( sparse.col(j), findFunction );
 
 		auto countFunction = [&sparse,&rowIndexes,&pColumnCounts,&pHint,&newRowIndex](int i, int j, T value)mutable
-		{ 
+		{
 			if( rowIndexes.find(i)!=rowIndexes.end() )
 			{
 				//if( j==15 )
@@ -246,10 +246,11 @@ namespace Jde::Math
 
 #pragma endregion
 #pragma region LoadCsv
+#define var const auto
 	template<typename T>
 	SparseTPtr<T> ESparse::LoadCsv( const std::string& csvFileName, std::vector<string>& columnNamesToFetch, size_t maxLines, bool notColumns/*=false*/, int chunkSize/*=100000*/ )
 	{
-		Stopwatch sw( StopwatchTypes::ReadFile, csvFileName, true );
+		Stopwatch sw( csvFileName );
 		std::vector<std::string> columnNames;
 		const bool allColumns = columnNamesToFetch.size()==0;
 
@@ -258,7 +259,7 @@ namespace Jde::Math
 		{
 			auto columnNameFunction = [&columnNamesToFetch,&columnIndexes,&columnNames,&notColumns](std::string line)
 			{
-				list<string> tokens = StringUtilities::Split<char>(line);
+				var tokens = StringUtilities::Split<char>(line);
 				int iToken=0;
 				for( const auto& token : tokens )
 				{
@@ -287,7 +288,7 @@ namespace Jde::Math
 				THROW( Exception(fmt::format( "Column counts don't add up for line '{}' actual:  '{}' expected:  '{}'", lineIndex, tokens.size(), columnValues.size()) ) );
 
 			auto columnIndex = 0;
-			for( auto& pToken = tokens.begin(); pToken!=tokens.end(); ++columnIndex, ++pToken )
+			for( auto pToken = tokens.begin(); pToken!=tokens.end(); ++columnIndex, ++pToken )
 			{
 				const double& value = *pToken;
 				auto& values = columnValues[columnIndex];
@@ -306,7 +307,7 @@ namespace Jde::Math
 		size_t lineCount = IO::File::ForEachLine4( csvFileName.c_str(), getValues, columnIndexes, maxLines, 1, 1073741824, 1500, &sw );
 		sw.Finish();
 
-		Stopwatch sw2( StopwatchTypes::Create, "sparse", true );
+		Stopwatch sw2( "sparse" );
 		VectorXi reserve( columnValues.size() );
 		int valueCount = 0;
 		for( auto columnIndex=0; columnIndex<columnValues.size(); ++columnIndex )
@@ -343,7 +344,7 @@ namespace Jde::Math
 			pair<size_t,vector<T>>& countSums = pValueSums->second;
 			++countSums.first;
 			vector<T>& sums = countSums.second;
-			
+
 			for( int sumIndex=0; sumIndex< meanIndexes.size(); ++sumIndex )
 				sums[sumIndex]+=sparse.coeff( i, meanIndexes[sumIndex] );
 		};
@@ -373,7 +374,7 @@ namespace Jde::Math
 		//map<int,int> newRowIndexes;
 		//auto pHint = newRowIndexes.begin();
 		function<bool(int,const T&)> function = [&where](int i, const T&)mutable
-		{ 
+		{
 			return where( i );
 			//bool include = where(i);
 			//if( include )
@@ -384,10 +385,10 @@ namespace Jde::Math
 		auto newRowIndexes = columnCountsIndexes.second;
 		auto pResult = new SparseT<T>( int(newRowIndexes.size()), sparse.cols() );
 		pResult->reserve( *columnCountsIndexes.first );
-		int newRowIndex=0;
+		//int newRowIndex=0;
 		//function<void(int,int,T)>
 		auto insertProc = [&where,&newRowIndexes,&pResult](int i, int j, T value)
-		{ 
+		{
 			if( where(i) )
 				pResult->insert( newRowIndexes[i], j )=value;
 		};
@@ -406,7 +407,7 @@ namespace Jde::Math
 		const int x1Count = int(std::round(double(rowCount)*percent));
 		Eigen::VectorXd column1Counts = Eigen::VectorXd::Zero(xColumnCount), column2Counts = Eigen::VectorXd::Zero(xColumnCount);
 		Eigen::VectorXd column1YCounts = Eigen::VectorXd::Zero(yColumnCount), column2YCounts = Eigen::VectorXd::Zero(yColumnCount);
-		VectorXi* pColumnCounts = nullptr;
+		//VectorXi* pColumnCounts = nullptr;
 		for( int randomIndex=0; randomIndex<rowCount; ++randomIndex )
 		{
 			const bool isMatrix1 = randomIndex<x1Count;
@@ -428,10 +429,10 @@ namespace Jde::Math
 		}
 
 		SparseT<T>* pX1 = new SparseT<T>( x1Count, xColumnCount ), *pX2 = new SparseT<T>( rowCount-x1Count, xColumnCount );
-		pX1->reserve( column1Counts ); 
+		pX1->reserve( column1Counts );
 		pX2->reserve( column2Counts );
 		SparseT<T>* pY1 = new SparseT<T>( x1Count, yColumnCount ), *pY2 = new SparseT<T>( rowCount-x1Count, yColumnCount );
-		pY1->reserve( column1YCounts ); 
+		pY1->reserve( column1YCounts );
 		pY2->reserve( column2YCounts );
 		int x1Index=0, x2Index=0, y1Index=0, y2Index=0;
 		for( int randomIndex=0; randomIndex<rowCount; ++randomIndex )
@@ -477,7 +478,7 @@ namespace Jde::Math
 
 		Eigen::VectorXd column1Counts = Eigen::VectorXd::Zero(xColumnCount), column2Counts = Eigen::VectorXd::Zero(xColumnCount);
 		int column2YCounts = rowCount-successCount;
-		VectorXi* pColumnCounts = nullptr;
+		//VectorXi* pColumnCounts = nullptr;
 		size_t trainIndex = 0;
 		for( int randomIndex=0; randomIndex<rowCount; ++randomIndex )
 		{
@@ -496,7 +497,7 @@ namespace Jde::Math
 				++trainIndex;
 		}
 		SparseT<T>* pX1 = new SparseT<T>( trainingCount, xColumnCount ), *pX2 = new SparseT<T>( rowCount-trainingCount, xColumnCount );
-		pX1->reserve( column1Counts ); 
+		pX1->reserve( column1Counts );
 		pX2->reserve( column2Counts );
 		Eigen::SparseVector<T>* pY2 = new Eigen::SparseVector<T>( rowCount-trainingCount );
 		pY2->reserve( column2YCounts );
@@ -543,7 +544,7 @@ namespace Jde::Math
 			pColumnCounts = std::move(pNewColumnCounts);
 		}
 
-		
+
 		auto pResult = new SparseT<T>( sparse.rows(), (int)columnCount );
 		pResult->reserve( *pColumnCounts );
 		ESparse::ForEachValue<T>( sparse, [&pResult](int i, int j, T value)mutable{pResult->insert(i,j)=value;} );
@@ -575,7 +576,7 @@ namespace Jde::Math
 			throw new Exception( "not Implemented." );
 		SparseT<T>* pResult = new SparseT<T>( sparse.rows(), (int)columnCount );
 		if( pColumnCounts!=nullptr )
-			pResult->reserve( *pColumnCounts );			
+			pResult->reserve( *pColumnCounts );
 		ESparse::ForEachValue<T>( sparse, [&pResult](int i, int j, T value)mutable{pResult->coeffRef(i,j)=value;} );
 		ForEach<T,Rows,Cols>( append, [&pResult,&sparseCols](size_t i, size_t j, T value)mutable{pResult->coeffRef(int(i),int(sparseCols+j))=value;} );
 
@@ -597,8 +598,8 @@ namespace Jde::Math
 			const auto& j = std::get<1>(item);
 			const auto& naValue = std::get<2>(item);
 			const auto& reverse = std::get<3>(item);
-			
-			size_t index=0;
+
+			//size_t index=0;
 			T previous = std::numeric_limits<T>::max();
 			int previousIndex = -1;
 
@@ -635,15 +636,15 @@ namespace Jde::Math
 			}
 			++functionIndex;
 		}
-		
+
 		if( sparse.innerNonZeroPtr()==nullptr )
 			throw new Exception( "not Implemented." );
 
 		for( int columnIndex = 0; columnIndex<sparseCols; ++columnIndex )
 			columnCounts(columnIndex) = sparse.innerNonZeroPtr()[columnIndex];
-			
+
 		SparseT<T>* pResult = new SparseT<T>( sparse.rows(), (int)columnCount );
-		pResult->reserve( columnCounts );			
+		pResult->reserve( columnCounts );
 		ESparse::ForEachValue<T>( sparse, [&pResult](int i, int j, T value)mutable{pResult->coeffRef(i,j)=value;} );
 		for( const auto& append : appendColumnValues )
 		{
@@ -669,10 +670,10 @@ namespace Jde::Math
 		auto pResult = new SparseT<T>( sparse.rows(), sparse.cols()+1 );
 		pResult->reserve( *pColumnCounts );
 		ESparse::ForEachValue<T>( sparse, [&pResult](int i, int j, T value)mutable{pResult->coeffRef(i,j)=value; } );
-		
+
 		return SparseTPtr<T>(pResult);
 	}
-#pragma endregion	
+#pragma endregion
 #pragma region AddRows
 	template<typename T>
 	SparseTPtr<T> ESparse::AddRows( const SparseT<T>& sparse1, const SparseT<T>& sparse2, bool addIndex/*=false*/ )
@@ -690,13 +691,13 @@ namespace Jde::Math
 			columnCounts.coeffRef(columnIndex) += sparse2.innerNonZeroPtr()[columnIndex];
 
 		const auto sparse1Rows = sparse1.rows();
-		const auto totalRows = sparse1Rows + sparse2.rows(); 
+		const auto totalRows = sparse1Rows + sparse2.rows();
 		const int lastColumnIndex = columnCount-1;
 		if( addIndex )
 			columnCounts(lastColumnIndex) = totalRows;
-			
+
 		auto pResult = new SparseT<T>( sparse1.rows()+sparse2.rows(), columnCount );
-		pResult->reserve( columnCounts );			
+		pResult->reserve( columnCounts );
 		ESparse::ForEachValue<T>( sparse1, [&pResult](int i, int j, T value)mutable{pResult->coeffRef(i,j)=value;} );
 		ESparse::ForEachValue<T>( sparse2, [&pResult,sparse1Rows](int i, int j, T value)mutable{pResult->coeffRef(i+sparse1Rows,j)=value;} );
 		if( addIndex )
@@ -726,11 +727,11 @@ namespace Jde::Math
 		std::function<void(int,int,T)> cellFunction = [isRowVector,&result,&matrix2, &binaryFunction](int rowIndex,int columnIndex,T value)mutable
 		{
 			const int matrix2RowIndex = isRowVector ? 0 : rowIndex;
-			const T cellValue = binaryFunction( value, matrix2.coeff(matrix2RowIndex, columnIndex) ); 
+			const T cellValue = binaryFunction( value, matrix2.coeff(matrix2RowIndex, columnIndex) );
 			result->coeffRef(rowIndex,columnIndex) = cellValue;
 		};
 		ESparse::ForEachValue<T>( matrix1, cellFunction );
-		return result;	
+		return result;
 	}
 	template<typename T>
 	SparseTPtr<T> ESparse::BsxFun( const SparseT<T>& matrix, const Eigen::Matrix<T,1,-1>& rowVector, const std::function<T(T,T)>& binaryFunction )
@@ -738,11 +739,11 @@ namespace Jde::Math
 		SparseTPtr<T> result = CreateSparseMatrix(matrix);
 		std::function<void(int,int,T)> cellFunction = [&result,&rowVector, &binaryFunction](int rowIndex,int columnIndex,T value)mutable
 		{
-			const T cellValue = binaryFunction( value, rowVector.coeff(0, columnIndex) ); 
+			const T cellValue = binaryFunction( value, rowVector.coeff(0, columnIndex) );
 			result->coeffRef(rowIndex,columnIndex) = cellValue;
 		};
 		ESparse::ForEachValue<T>( matrix, cellFunction );
-		return result;	
+		return result;
 	}
 #pragma region Merge
 	template<typename T>
@@ -754,13 +755,13 @@ namespace Jde::Math
 		const auto sparseColumnCount = sparse.cols();
 		ESparse::ForEach<T>( sparse.col(columnIndexJoin), [&pHint,&valueNewIndexes](int i, const T* pValue)mutable{pHint = valueNewIndexes.insert( pHint, make_pair(pValue ? *pValue : T(0),i) );} );
 		auto pColumnCounts1 = GetColumnCounts( sparse );
-		
+
 		auto appendWhere = [&valueNewIndexes](int i, const T& value){return valueNewIndexes.find(value)!=valueNewIndexes.end();};
 		auto pColumnCounts2 = std::move( ESparse::GetColumnCounts<T>(append, columnIndexJoin, appendWhere).first );
 		const auto appendColumnCount = append.cols();
 		Eigen::VectorXi columnCounts( sparseColumnCount+appendColumnCount-1 );
 		columnCounts << *pColumnCounts1, pColumnCounts2->bottomRows( pColumnCounts2->rows()-1 );
-		
+
 		auto pResult = new Eigen::SparseMatrix<T>( sparse.rows(), sparseColumnCount+appendColumnCount-1 );
 		pResult->reserve( columnCounts );
 		ESparse::ForEachValue<T>( sparse, [&pResult](int i, int j, T value){pResult->insert(i,j) = value; } );
@@ -794,7 +795,7 @@ namespace Jde::Math
 		//	clog << "[" << oldRowIndex << ", " << j << "]=" << cellValue << std::endl;
 		auto pOldNewIndex = oldNewIndexes.find(oldRowIndex);
 		if( pOldNewIndex!=oldNewIndexes.end() )
-		pResult->insert(pOldNewIndex->second,j+sparseColumnCount-1) = cellValue; 
+		pResult->insert(pOldNewIndex->second,j+sparseColumnCount-1) = cellValue;
 		};
 		ESparse::ForEachValue<T>( append, insertFunction );
 
@@ -807,7 +808,7 @@ namespace Jde::Math
 	template<typename T>
 	std::tuple<SparseTPtr<T>,up<Eigen::SparseVector<T>>,up<Eigen::SparseVector<T>>> ESparse::Normalize( const Eigen::SparseMatrix<T>& matrix, bool sample/*=true*/ )
 	{
-		Stopwatch sw( StopwatchTypes::Calculate, (wchar_t*)nullptr, true );
+		Stopwatch sw( "Normalize" );
 		auto stdDevAverage = EMatrix::StandardDeviationColumns<T>( matrix, sample );
 		auto average = std::move(stdDevAverage.second);
 		auto standardDeviation = std::move(stdDevAverage.first);
@@ -826,10 +827,10 @@ namespace Jde::Math
 	template<typename T>
 	SparseTPtr<T> ESparse::Prefix( const SparseT<T>& matrix, T value )
 	{
-		Stopwatch sw( StopwatchTypes::Prefix );
+		Stopwatch sw( "Prefix" );
 		const auto rowCount = matrix.rows();
 		const auto columnCount = matrix.cols();
-		
+
 		SparseT<T>* pResult = new SparseT<T>( rowCount, columnCount+1 );
 		const int additionalRoom = value==0.0 ? 0 : rowCount;
 		if( matrix.innerNonZeroPtr()!=nullptr )
@@ -842,8 +843,8 @@ namespace Jde::Math
 		}
 		else
 			pResult->data().resize( matrix.data().size()+additionalRoom );
-		
-		
+
+
 		for( int rowIndex = 0; rowIndex<rowCount; ++rowIndex )
 			pResult->insert(rowIndex,0) = value;
 		const auto function = [pResult](int rowIndex, int columnIndex, T value)mutable{ pResult->insert(rowIndex, columnIndex+1)=value; };
@@ -858,18 +859,18 @@ namespace Jde::Math
 		//auto result2 = matrix1;
 		auto result = CreateSparseMatrix( matrix1 );
 		function<void(int,int,T)> function = [&result, &rows,&binaryFunction](int rowIndex, int columnIndex, T value)mutable
-		{ 
-			result->coeffRef(rowIndex, columnIndex) = binaryFunction(value, rows.coeff(columnIndex)); 
+		{
+			result->coeffRef(rowIndex, columnIndex) = binaryFunction(value, rows.coeff(columnIndex));
 		};
 		ESparse::ForEachValue( matrix1, function );
 		return result;
 	}
 #pragma endregion
-#pragma region Sort	
+#pragma region Sort
 	template<typename T, int SortCount>
 	SparseTPtr<T> ESparse::Sort(const SparseT<T>& sparse, std::array<int,SortCount> columnIndexes, Stopwatch* pStopwatch )
 	{
-		Stopwatch createArrays(pStopwatch, StopwatchTypes::Create, "creaeArrays" );
+		Stopwatch createArrays( pStopwatch, "createArrays" );
 		std::vector<std::array<T,SortCount+1>> values( sparse.rows() );
 		for( int j=0; j<SortCount; ++j )
 		{
@@ -880,7 +881,7 @@ namespace Jde::Math
 			}
 		}
 		createArrays.Finish();
-		Stopwatch sort(pStopwatch, StopwatchTypes::Other, "sort" );
+		Stopwatch sort( pStopwatch, "sort" );
 		std::set<std::array<T,SortCount+1>> sortedValues;
 		for( int i=0; i<values.size(); ++i )
 		{
@@ -888,7 +889,7 @@ namespace Jde::Math
 			arry[SortCount] = T(i);
 			sortedValues.emplace( arry );
 		}
-		Stopwatch copy( pStopwatch, StopwatchTypes::Copy, "Copy" );
+		Stopwatch copy( pStopwatch, "Copy" );
 		auto pResult = CreateSparseMatrix( sparse );
 		int i=0;
 		for( const auto& row : sortedValues )
@@ -912,7 +913,7 @@ namespace Jde::Math
 		result->reserve( columnCount );
 		auto sumFunction = [result](int,int columnIndex,T value)mutable
 		{
-			result->coeffRef(columnIndex) += value; 
+			result->coeffRef(columnIndex) += value;
 		};
 		ESparse::ForEachValue<T>( matrix, sumFunction );
 		return up<Eigen::SparseVector<T>>( result );
@@ -923,24 +924,24 @@ namespace Jde::Math
 	SparseTPtr<T> ESparse::CreateSparseMatrix( const SparseT<T>& copyFrom )
 	{
 		auto columnCounts = GetColumnCounts(copyFrom);
-		SparseT<T>* pResult; 
+		SparseT<T>* pResult;
 		if( columnCounts==nullptr )
 			pResult = new SparseT<T>( copyFrom );
 		else
 		{
 			pResult = new SparseT<T>( copyFrom.rows(), copyFrom.cols() );
-			pResult->reserve( *columnCounts );			
+			pResult->reserve( *columnCounts );
 		}
 		//pResult->data().resize( copyFrom.data().size() );
 		//pResult->resize( copyFrom.size() );
-		
+
 		return SparseTPtr<T>(pResult);
 	}
 	template<typename T>
-	up<Eigen::SparseVector<T>> ESparse::CreateSparseVector( const Eigen::SparseVector<T>& copyFrom ) 
+	up<Eigen::SparseVector<T>> ESparse::CreateSparseVector( const Eigen::SparseVector<T>& copyFrom )
 	{
-		
-		auto pResult = new Eigen::SparseVector<T>(); 
+
+		auto pResult = new Eigen::SparseVector<T>();
 		const int count = copyFrom.nonZeros();
 		pResult->reserve( count );
 		pResult->resize( count );
@@ -954,12 +955,12 @@ namespace Jde::Math
 		const auto rowCount = matrix.rows();
 		const auto columnCount = matrix.cols();
 
-		
+
 		auto pVariance = new Eigen::SparseVector<T>( columnCount ); pVariance->reserve( columnCount );
 		auto pAverages = up<Eigen::SparseVector<T>>(nullptr);
 		if( valuesOnly )
 		{
-			pAverages = up<Eigen::SparseVector<T>>( new Eigen::SparseVector<T>( columnCount ) ); 
+			pAverages = up<Eigen::SparseVector<T>>( new Eigen::SparseVector<T>( columnCount ) );
 			pAverages->reserve( columnCount );
 			for( int columnIndex=0; columnIndex<columnCount; ++columnIndex )
 			{
@@ -988,11 +989,12 @@ namespace Jde::Math
 			const T denominator = T(sample ? rowCount-1 : rowCount);
 			Eigen::SparseMatrix<T> cov = ( centered->adjoint() * (*centered) ) / denominator;
 			centered.reset();
-		
+
 			for( int colIndex=0; colIndex < columnCount; ++colIndex )
 				pVariance->insert(colIndex) = cov.coeff(colIndex,colIndex);
 		}
 		return std::make_pair( up<Eigen::SparseVector<T>>(pVariance), std::move(pAverages) );
 	}
 #pragma endregion
+#undef var
 }
