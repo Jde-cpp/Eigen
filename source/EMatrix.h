@@ -623,7 +623,7 @@ namespace Jde::Math
 	up<Eigen::Matrix<T,-1,-1>> EMatrix::Covariance( const SparseT<T>& sparse, Eigen::Matrix<T,-1,-1>* pExisting, bool correlationCoefficient/*=false*/, size_t threadCount/*=1*/, Stopwatch* pStopwatch/*=nullptr*/, size_t maxColumnCount/*=std::numeric_limits<size_t>::max()*/, const std::function<void(const Eigen::Matrix<float,-1,-1>&)>* pSaveFunction/*=nullptr*/ )
 	{
 		const size_t columnCount = std::min<size_t>( maxColumnCount, sparse.cols() );
-		clog << "columnCount = " << columnCount << "  maxColumnCount=" << maxColumnCount << "  sparse.cols()=" << sparse.cols();
+		//clog << "columnCount = " << columnCount << "  maxColumnCount=" << maxColumnCount << "  sparse.cols()=" << sparse.cols();
 		auto pResult = pExisting ? pExisting : new Eigen::Matrix<T,-1,-1>( sparse.cols(), sparse.cols() );
 		size_t iterationCount = size_t(std::pow<size_t>(columnCount,2)/2)-1;
 		//const size_t progressIndex = std::max( size_t(10000), size_t(iterationCount/10) );
@@ -716,8 +716,8 @@ namespace Jde::Math
 				//resultMutex.unlock();
 
 				++iteration;
-				if( columnIndex2%100==0 )
-					clog << "correlation[  " << columnIndex1 << ", " << columnIndex2 << "]=" << pResult->coeffRef( columnIndex1, columnIndex2 ) << endl;
+				//if( columnIndex2%100==0 )
+					//clog << "correlation[  " << columnIndex1 << ", " << columnIndex2 << "]=" << pResult->coeffRef( columnIndex1, columnIndex2 ) << endl;
 				//pStopwatch->Progress( iteration, iterationCount );
 				if( pSaveFunction!=nullptr && (pStopwatch->Elapsed()-lastSave)>saveTimespan )
 				{
@@ -1021,7 +1021,7 @@ namespace Jde::Math
 		else
 		{
 			VectorD<Rows> h = VectorD<Rows>::LinSpaced( Rows,0,double(Rows-1)/Rows ); //h = linspace (0, 1, n)';
-			std::clog << h.array().sum() << std::endl;
+			//std::clog << h.array().sum() << std::endl;
 			MatrixD<Rows,3> hsv;
 			hsv << h, VectorD<Rows>::Ones(), VectorD<Rows>::Ones();
 			result =  Hsv2Rgb<Rows>(hsv);//hsv2rgb ([h, ones(n, 1), ones(n, 1)]);
@@ -1046,7 +1046,7 @@ namespace Jde::Math
 		VectorD<Rows> hue2; hue2 << h.unaryExpr( [](const double x) { double value=x-1.0/3.0; return /*value<0 ? 1.0+value :*/ std::fmod(value+1.0,1.0); } );
 		MatrixD<Rows,3> hue(Rows,3);
 		hue << hue1, h, hue2;// hue = [mod(h - 2/3, 1), h , mod(h - 1/3, 1)];
-		std::clog << hue.array().sum() << std::endl;
+		//std::clog << hue.array().sum() << std::endl;
 		VectorD<Rows> sv = s.array()*v.array();
 		MatrixD<Rows,3> f = v.cwiseProduct( sv ).replicate(1,3); //Matrix<Rows,3>::One();  //factor s*v -> f   f = repmat (s .* v, 1, 3);
 		//add s*v*hue-function to rgb map
@@ -1277,7 +1277,7 @@ namespace Jde::Math
 			singularValues_inv(columnIndex) = singularValues(columnIndex) > pinvtoler ? T(1.0)/singularValues(columnIndex) : T(0.0);
 
 		auto result = svd.matrixV()*singularValues_inv.asDiagonal()*svd.matrixU().transpose();
-		std::clog << "Rows:  " << Rows << endl;
+		//std::clog << "Rows:  " << Rows << endl;
 		return Eigen::Matrix<T,Rows,Cols>(result);
 	}
 #pragma endregion
@@ -1371,12 +1371,12 @@ namespace Jde::Math
 		std::unordered_set<size_t> duplicates;
 		auto findDuplicates = [&duplicates, &offset, &originalColumnNames,&maxCorrelation](size_t rowIndex, size_t columnIndex, T value)mutable
 		{
-			if( rowIndex<columnIndex &&  (value>maxCorrelation || value<-maxCorrelation) )
-			{
-				auto insertResult = duplicates.insert( columnIndex+offset );
-				if( insertResult.second )
-					clog << "removing row[" << columnIndex+offset <<"]=" << originalColumnNames[columnIndex+offset] << "duplcated with [" << rowIndex+offset << "]=" << originalColumnNames[rowIndex+offset] << std::endl;
-			}
+//			if( rowIndex<columnIndex &&  (value>maxCorrelation || value<-maxCorrelation) )
+//			{
+				//auto insertResult = duplicates.insert( columnIndex+offset );
+				//if( insertResult.second )
+					//clog << "removing row[" << columnIndex+offset <<"]=" << originalColumnNames[columnIndex+offset] << "duplcated with [" << rowIndex+offset << "]=" << originalColumnNames[rowIndex+offset] << std::endl;
+//			}
 		};
 		ForEach<T,-1,-1>( originalCorrelationCoeficient, findDuplicates );
 
